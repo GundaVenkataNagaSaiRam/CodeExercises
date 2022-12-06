@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://retalix.com/R10/services"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://retalix.com/R10/services"
+           elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:complexType name="EmployeeType">
+    <xs:sequence>
+      <xs:element name="EmployeeId" type="xs:int" minOccurs="0"/>
+      <xs:element name="FirstName" type="xs:string" minOccurs="0"/>
+      <xs:element name="LastName" type="xs:string" minOccurs="0"/>
+      <xs:element name="Email" type="xs:string" minOccurs="0"/>      
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
