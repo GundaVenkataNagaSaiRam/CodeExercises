@@ -38,9 +38,7 @@ namespace Retalix.StoreServices.BusinessServices.FrontEnd.Employee
                     }                
                 case ActionTypeCodes.Delete:
                     DeleteEmployee(Request.Employee);
-                    break;
-                case ActionTypeCodes.Lookup:
-                    break;                
+                    break;                         
                 default:
                     break;
             }
