@@ -16,27 +16,28 @@ namespace Retalix.StoreServices.BusinessServices.FrontEnd.Employee
 {
     public class EmployeeLookupService : BusinessServiceBase<EmployeeLookupRequest, EmployeeLookupResponse>
     {
-        private readonly IEmployeeDao _employeeDAO;
+        private readonly IEmployeeDao _employeeDao;
         private readonly DataMapper _mapper;
 
-        public EmployeeLookupService(IEmployeeDao employeeDAO)
+        public EmployeeLookupService(IEmployeeDao employeeDao)
         {
-            _employeeDAO = employeeDAO;
+            _employeeDao = employeeDao;
             _mapper = new DataMapper();
             _mapper.AddConfig(new EmployeeMappingConfiguration());
         }
 
         public override IDocumentResponse FormatErrorResponse(IDocumentRequest request, Exception exception)
         {
-            throw new NotImplementedException();
+            string resultMessage = exception.Message;
+            return new DocumentStringResponse(resultMessage);
         }
 
         protected override EmployeeLookupResponse InternalExecute()
         {
-            if (Request.Request.EmployeeId == 0) 
-                throw new NotImplementedException();
+                if (Request != null && Request.Request != null && Request.Request.EmployeeId == 0)
+                    throw new Exception("Invalid Request");
 
-            var employee = _employeeDAO.GetEmployee(Request.Request.EmployeeId); 
+            var employee = _employeeDao.GetEmployee(Request.Request.EmployeeId); 
 
             return CreateResponseForKey(employee);
         }
@@ -53,8 +54,7 @@ namespace Retalix.StoreServices.BusinessServices.FrontEnd.Employee
 
             if (employeeRow != null)
             {
-                response.Response = new EmployeeType[1] { employee 
-                };
+                response.Response = new EmployeeType[1] { employee };
             }
             return response;
         }

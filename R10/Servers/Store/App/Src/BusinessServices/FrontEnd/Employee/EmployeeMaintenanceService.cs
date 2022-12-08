@@ -9,24 +9,26 @@ using Retalix.StoreServices.BusinessServices.Common.Services;
 using Retalix.StoreServices.BusinessServices.FrontEnd.AutoMapping;
 using Retalix.StoreServices.BusinessServices.FrontEnd.Employee;
 using Retalix.StoreServices.Model.Employee;
+using Retalix.Contracts.Generated.CashOffice;
+using Retalix.StoreServices.BusinessServices.FrontEnd.Utils;
 
 namespace Retalix.StoreServices.BusinessServices.FrontEnd.Employee
 {
     public class EmployeeMaintenanceService : BusinessServiceBase<EmployeeMaintenanceRequest, EmployeeMaintenanceResponse>
     {
-        private readonly IEmployeeDao _employeeDAO;
+        private readonly IEmployeeDao _employeeDao;
         private readonly DataMapper _mapper;
 
-        public EmployeeMaintenanceService(IEmployeeDao employeeDAO)
+        public EmployeeMaintenanceService(IEmployeeDao employeeDao)
         {
-            _employeeDAO = employeeDAO;
+            _employeeDao = employeeDao;
             _mapper = new DataMapper();
             _mapper.AddConfig(new EmployeeMappingConfiguration());
         }
 
         protected override EmployeeMaintenanceResponse InternalExecute()
         {
-            switch (Request.Action1)
+            switch (Request.Action)
             {
                 case ActionTypeCodes.AddOrUpdate:
                 case ActionTypeCodes.AddUpdate:
@@ -45,10 +47,6 @@ namespace Retalix.StoreServices.BusinessServices.FrontEnd.Employee
             return (EmployeeMaintenanceResponse)(Request.Header.MessageId == null ? BuildResponse() : BuildResponse(Request.Header.MessageId.Value));
         }
 
-        private object BuildResponse()
-        {
-            throw new NotImplementedException();
-        }
 
         private void ManipulateEmployee(EmployeeType employeeRow)
         {
@@ -60,7 +58,7 @@ namespace Retalix.StoreServices.BusinessServices.FrontEnd.Employee
                 Email = employeeRow.Email,
             };
 
-            _employeeDAO.SaveOrUpdate(employee);
+            _employeeDao.SaveOrUpdate(employee);
         }
 
         private void DeleteEmployee(EmployeeType employeeRow)
@@ -70,7 +68,7 @@ namespace Retalix.StoreServices.BusinessServices.FrontEnd.Employee
                 EmployeeId = employeeRow.EmployeeId
             };
 
-            _employeeDAO.Delete(employee);
+            _employeeDao.Delete(employee);
         }
 
         private EmployeeMaintenanceResponse BuildResponse(string requestId = null)
@@ -90,7 +88,8 @@ namespace Retalix.StoreServices.BusinessServices.FrontEnd.Employee
 
         public override Model.Infrastructure.Service.IDocumentResponse FormatErrorResponse(Model.Infrastructure.Service.IDocumentRequest request, Exception exception)
         {
-            throw new NotImplementedException();
+            string resultMessage = exception.Message;
+            return new DocumentStringResponse(resultMessage);
         }
     }
 }
